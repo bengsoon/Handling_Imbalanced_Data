@@ -10,7 +10,7 @@ An imbalanced dataset is when the distribution of the target classes of either a
 Even though the events that we are trying to detect are uncommon, the costs of those events happening and catching us unprepared are usually very, very expensive. For example, the cost of fixing a failed machine is usually more expensive than turning off the machine for predictive maintenance. The cost of having a stroke or heart attack is definitely more expensive than to have an early detection and prevention of those diseases. 
 
 ## Dataset Used
-We are using the Stroke dataset provided in Kaggle (URL: https://www.kaggle.com/fedesoriano/stroke-prediction-dataset#). A disclaimer to put forth upfront is that the original source of this dataset was not divulged by the Kaggler, hence the validity or the authenticity of the dataset cannot be determined. That being said, the nature of the dataset is still presented to us as an "Imbalanced Classification" problem.
+We are using the Stroke dataset provided in Kaggle (URL: https://www.kaggle.com/fedesoriano/stroke-prediction-dataset#). A disclaimer to put forth upfront is that the original source of this dataset was not divulged by the Kaggler, hence the validity or the authenticity of the dataset cannot be determined. That being said, the nature of the dataset still well represents the "Imbalanced Classification" type of problem.
 
 ## What is covered in this Notebook?
 This Notebook starts off **Exploratory Data Analysis (EDA)** of the data where we look at the basic statistical distribution of the data, determining the data quality and getting a basic understanding of how each feature correlates to our target variable (Stroke or No Stroke).

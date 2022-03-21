@@ -14,11 +14,25 @@ We are using the Stroke dataset provided in Kaggle (URL: https://www.kaggle.com/
 
 ## What is covered in this Notebook?
 This Notebook starts off **Exploratory Data Analysis (EDA)** of the data where we look at the basic statistical distribution of the data, determining the data quality and getting a basic understanding of how each feature correlates to our target variable (Stroke or No Stroke).
-![image.png](attachment:850ded0c-8705-4f84-8515-cf8b0b2ee10b.png)
 
+![Distribution of Dataset](https://i.imgur.com/oGgFMdF.png)
+
+_Figure 1: Distribution of Dataset_
+<br>
+<br>
 The dataset is split into `train` and `test` sets. We ensure that the distribution of the imbalanced classes is preserved for both `train` and `test` sets using `StratifiedShuffleSplit`.
 
-![image.png](attachment:8614346f-d510-4bc9-9874-e55c0de3f9d7.png)
+``` jupyter
+***** Train set distribution *****
+0    0.951321
+1    0.048679
+Name: stroke, dtype: float64
+
+***** Test set distribution *****
+0    0.951076
+1    0.048924
+Name: stroke, dtype: float64
+```
 
 We then proceed to the **Data Preparation** stage where we look into different techniques of imputation, feature scaling and categorical enconding. We prepare a pipeline for these data preparation steps using Scikit-Learn's `pipeline`. This `pipeline` is then used as the input to the models that we will evaluate later.
 
@@ -38,49 +52,34 @@ The supplementary portion of this also includes the **explainability of the mode
 
 
 ## Metric Used 
-As we do not have a reference for this dataset, we are using **Recall** score as our main primary metric as we would prefer to have higher number of stroke prediction. Since the cost of not detecting stroke when there is is higher, we would like to be able to detect more stroke patients than missing them out.
+ Selection of metrics for different domains such as disease prediction vs failure prediction is another topic of research and discussion itself, but for this exercise we are using **Recall** score as our main primary metric as we are aiming to have a higher number of stroke prediction. Since the cost of not detecting stroke when there is is higher, we would like to be able to detect more stroke patients than missing them out.
 
 ## Techniques employed to tackle the imbalanced distribution
-    . Sampling technqiues (Random Oversampling, Random Undersampling SMOTe)
-    . Moving threshold
-    . Customized models 
+* **Sampling techniques** (Random Oversampling, Random Undersampling SMOTe)
+    - Because of the imbalance in the classes (majority "No Stroke"), the vanilla models such as `LogisticRegression` and even `RandomForestClassifier` out of the box will be completely biased to the majority class. 
+    - We can alleviate this by creating "Synthetic" minority dataset based on its distribution 
+        - `SMOTe`, which stands for Synthetic Minority Over-sampling Technique, will take a sample from the minority dataset, find its k-nearest neighbors and obtain a vector between the sample and one of the k neighbors and multiply that with a random number between 0 and 1.
+        - `RandomOverSampler` and `RandomUnderSampler` will randomly (and naively) oversample or undersample the minority or majority class, respectively.
+        - As we are also employing cross validation technique during our training stage, much care needs to be taken to avoid data leakage, where during training time, our model happens to be seeing data points that are similar to points that were supposedly kept away for the cross-validation stage. To avoid this, the `imblearn` package also provides its version of `Pipeline` that allows us to only resample only within the each fold during the cross validation stage (as opposed to resampling the whole training data).  
+* **Customized models**
+    - `imblearn` package also provides models that are customized from the vanilla `sklearn` models such as `RandomForestClassifier` and `BaggingCLassifier`.
+    - Balanced Random Forest Classiifer model:
+        - Each tree of the balanced forest will be provided a balanced bootstrap sample (by randomly under-sampling each boostrap sample). This will help the model to not "look too much" at the majority class at each bootstrap.
+    - Balanced Bagging Classifier:
+        - Each bootstrap sample will be further resampled to achieve the `sampling_strategy` desired.
 
+* **Moving Threshold**
 
-```python
-#%pip install -U imbalanced-learn seaborn
-```
+    - As the models provide probabilities of the predictions, we can actually tune the threshold in order optimize our performance based on the metrics that we have chosen. the threshold ptimal threshold when converting probabilities to crisp class labels for imbalanced classification.
+    
+    
+## Model Explainability: Feature Importance
 
+As we are using a Random Forest model, we are able to determine which of the independent variables / features are playing the biggest predictive role in the model.
 
-```python
-import os
-from pathlib import Path
-import pandas as pd
-import numpy as np
-from collections import Counter
-import seaborn as sns
-from matplotlib import pyplot as plt
-%matplotlib inline
+![Feature Importance](https://i.imgur.com/hLGIVPT.png)
 
-from sklearn.model_selection import StratifiedShuffleSplit, cross_val_predict
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
-from sklearn.metrics import confusion_matrix, f1_score, recall_score, precision_score, roc_curve, roc_auc_score, balanced_accuracy_score
-from sklearn.metrics import ConfusionMatrixDisplay, precision_recall_curve, accuracy_score, classification_report, fbeta_score, make_scorer
-
-from imblearn.over_sampling import SMOTE, RandomOverSampler
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.pipeline import make_pipeline, Pipeline
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier
-from imblearn.ensemble import BalancedRandomForestClassifier, BalancedBaggingClassifier
-
-from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
-from pprint import pprint as pp
-import joblib
-```
+_Feature Importance_
 
 ## References: 
 

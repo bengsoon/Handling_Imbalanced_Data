@@ -83,11 +83,13 @@ _Feature Importance_
 
 ## References: 
 
-1. https://elitedatascience.com/imbalanced-classes
-2. https://machinelearningmastery.com/smote-oversampling-for-imbalanced-classification/
-3. https://en.wikipedia.org/wiki/F-score
-4. https://www.publichealth.columbia.edu/research/population-health-methods/evaluating-risk-prediction-roc-curves
-5. https://machinelearningmastery.com/threshold-moving-for-imbalanced-classification/
-6. https://en.wikipedia.org/wiki/Precision_and_recall
-7. Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow by Aurélien Géron
+1. https://scikit-learn.org/
+2. https://imbalanced-learn.org/stable/
+3. https://elitedatascience.com/imbalanced-classes
+4. https://machinelearningmastery.com/smote-oversampling-for-imbalanced-classification/
+5. https://en.wikipedia.org/wiki/F-score
+6. https://www.publichealth.columbia.edu/research/population-health-methods/evaluating-risk-prediction-roc-curves
+7. https://machinelearningmastery.com/threshold-moving-for-imbalanced-classification/
+8. https://en.wikipedia.org/wiki/Precision_and_recall
+9. Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow by Aurélien Géron
 
